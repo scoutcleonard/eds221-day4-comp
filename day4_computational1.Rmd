@@ -1,0 +1,174 @@
+---
+title: "Computational Session 1 Day 4"
+author: "Scout Leonard"
+date: "8/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(palmerpenguins)
+library(tidyverse)
+```
+
+#Write a For Loop!
+
+```{r}
+quarter_splits <- c(1.0, 1.1, 1.2, 1.1, 1.4, 1.5, 1.6, 1.4)
+
+consectutive_quarters <- vector(mode = "numeric", length = length(quarter_splits)-1)
+
+for (i in seq_along(quarter_splits)-1) {
+  t <- quarter_splits[i] + quarter_splits[i+1]
+  consectutive_quarters[i] <- t
+}
+
+consectutive_quarters
+```
+
+# Basic Function Structure Practice
+
+```{r}
+birddog_sum <- function(bird, dog) {
+  
+  if(bird > 50){
+    stop("Birds can't be greater than 50!")
+  }
+  
+  if(bird<10){
+    message("Cool little bird")
+  }
+  
+  if(dog<0){
+    warning("Can a dog be less than 0 pounds?")
+  }
+  
+  add_birddog <- bird + dog
+  return(add_birddog)
+}
+
+bird_100_dog_5 <- birddog_sum(bird = 11, dog = 5)
+#storing a value
+
+birddog_sum(bird = 25, dog = 10)
+
+birddog_sum(bird = 4, dog = 5)
+
+birddog_sum(bird = 6, dog = -8)
+
+
+```
+
+#### function name <- elements
+#### the job to do
+
+
+```{r}
+say_hello <- function(friend, weekday) {
+  print(paste("Hello", friend, "have a great", weekday))
+}
+
+say_hello(friend = "Tina", weekday = "Thursday")
+```
+
+### Print versus return example 
+
+```{r}
+find_multiple <- function (a,b) {
+  my_multiplication <- a*b
+  print(my_multiplication)
+}
+
+find_multiple(a= 10, b= 6)
+
+find_multiple(a= 10, b=6) +12
+
+#Usually if you are doing something like this you store the value, as below: 
+my_final_value <- find_multiple(a= 10, b=12)
+my_final_value
+```
+
+### Functions with Conditions 
+
+```{r}
+animal_age <- function(animal, age) {
+  
+  if(!animal %in% c("dog", "goat")){
+    stop("Animal must be a dog or a goat.")
+  }
+  
+  if(animal == "dog") {
+    creature_age <- age * 7
+  }
+  
+  else if(animal == "goat") {
+    creature_age <- age * 4.7
+  }
+  
+  return(creature_age)
+}
+
+animal_age(animal = "dog", age = 13)
+# animal_age(animal = "urchin", age = 13) this would break! 
+
+```
+
+```{r}
+adelie_gentoo <- penguins %>%
+  filter(species %in% c("Adelie", "Gentoo"))
+
+# In the filter column, do any elements match the things from our vector??
+```
+
+```{r}
+adelie_gentoo_wrong <- penguins %>% 
+  filter(species == c("Adelie", "Gentoo"))
+
+# Looking for exact matches that have the order Adelie, adn then Gentoo
+```
+
+### Function with For Loops 
+
+#### Knowing that you can wrote `colnames(of some dataframe)`, update the function so that for each iteration it returns a phrse: "The mean value of _______ is ________. 
+
+```{r}
+df_means <- function(df) {
+  for (i in 1:ncol(df)) {
+    col_mean <- mean(df[[i]], na.rm = TRUE)
+    column_name <- colnames(df[i])
+    print(paste("The mean value of", column_name, "is", col_mean))
+  }
+}
+
+df_means(df = mtcars)
+```
+```{r}
+# Make a subset of only structural size variables from the penguins dataset for Chinstrap 
+#Filter is for rows, select is for columns
+
+chinstrap_data <- penguins %>% 
+  filter(species == "Chinstrap") %>% 
+  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
+
+df_means(df = chinstrap_data)
+
+df_means(penguins)
+```
+
+### Condition to check the class of an input
+```{r}
+lunchtime <- function(tacos, price_per) {
+  
+  if (is.numeric(tacos) == FALSE) {
+    stop("You must input a number of tacos.")
+  }
+  
+  tot_price <- tacos * price_per
+  return((tot_price))
+}
+
+# lunchtime(tacos = "bananas", price_per = 2.50)
+lunchtime(tacos = 4, price_per = 2.50)
+```
+
